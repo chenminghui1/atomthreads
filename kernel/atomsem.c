@@ -97,7 +97,7 @@
 
 typedef struct sem_timer
 {
-    ATOM_TCB *tcb_ptr;  /* Thread which is suspended with timeout */
+    TCB_t *tcb_ptr;  /* Thread which is suspended with timeout */
     ATOM_SEM *sem_ptr;  /* Semaphore the thread is suspended on */
 } SEM_TIMER;
 
@@ -175,7 +175,7 @@ uint8_t atomSemDelete (ATOM_SEM *sem)
 {
     uint8_t status;
     CRITICAL_STORE;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
     uint8_t woken_threads = FALSE;
 
     /* Parameter check */
@@ -316,7 +316,7 @@ uint8_t atomSemGet (ATOM_SEM *sem, int32_t timeout)
     uint8_t status;
     SEM_TIMER timer_data;
     ATOM_TIMER timer_cb;
-    ATOM_TCB *curr_tcb_ptr;
+    TCB_t *curr_tcb_ptr;
 
     /* Check parameters */
     if (sem == NULL)
@@ -498,7 +498,7 @@ uint8_t atomSemPut (ATOM_SEM * sem)
 {
     uint8_t status;
     CRITICAL_STORE;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
 
     /* Check parameters */
     if (sem == NULL)

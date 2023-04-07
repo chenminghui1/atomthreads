@@ -75,7 +75,7 @@
 /* Delay callbacks data structure */
 typedef struct delay_timer
 {
-    ATOM_TCB *tcb_ptr;  /* Thread which is suspended with timeout */
+    TCB_t *tcb_ptr;  /* Thread which is suspended with timeout */
 
 } DELAY_TIMER;
 
@@ -326,7 +326,7 @@ void atomTimerTick (void)
  */
 uint8_t atomTimerDelay (uint32_t ticks)
 {
-    ATOM_TCB *curr_tcb_ptr;
+    TCB_t *curr_tcb_ptr;
     ATOM_TIMER timer_cb;
     DELAY_TIMER timer_data;
     CRITICAL_STORE;

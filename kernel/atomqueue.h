@@ -35,8 +35,8 @@ extern "C" {
 
 typedef struct atom_queue
 {
-    ATOM_TCB *  putSuspQ;       /* Queue of threads waiting to send */
-    ATOM_TCB *  getSuspQ;       /* Queue of threads waiting to receive */
+    TCB_t *  putSuspQ;       /* Queue of threads waiting to send */
+    TCB_t *  getSuspQ;       /* Queue of threads waiting to receive */
     uint8_t *   buff_ptr;       /* Pointer to queue data area */
     uint32_t    unit_size;      /* Size of each message */
     uint32_t    max_num_msgs;   /* Max number of storable messages */

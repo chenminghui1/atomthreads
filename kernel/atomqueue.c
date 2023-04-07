@@ -102,9 +102,9 @@
 
 typedef struct queue_timer
 {
-    ATOM_TCB   *tcb_ptr;    /* Thread which is suspended with timeout */
+    TCB_t   *tcb_ptr;    /* Thread which is suspended with timeout */
     ATOM_QUEUE *queue_ptr;  /* Queue the thread is interested in */
-    ATOM_TCB   **suspQ;     /* TCB queue which thread is suspended on */
+    TCB_t   **suspQ;     /* TCB queue which thread is suspended on */
 } QUEUE_TIMER;
 
 
@@ -205,7 +205,7 @@ uint8_t atomQueueDelete (ATOM_QUEUE *qptr)
 {
     uint8_t status;
     CRITICAL_STORE;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
     uint8_t woken_threads = FALSE;
 
     /* Parameter check */
@@ -339,7 +339,7 @@ uint8_t atomQueueGet (ATOM_QUEUE *qptr, int32_t timeout, uint8_t *msgptr)
     uint8_t status;
     QUEUE_TIMER timer_data;
     ATOM_TIMER timer_cb;
-    ATOM_TCB *curr_tcb_ptr;
+    TCB_t *curr_tcb_ptr;
 
     /* Check parameters */
     if ((qptr == NULL) || (msgptr == NULL))
@@ -545,7 +545,7 @@ uint8_t atomQueuePut (ATOM_QUEUE *qptr, int32_t timeout, uint8_t *msgptr)
     uint8_t status;
     QUEUE_TIMER timer_data;
     ATOM_TIMER timer_cb;
-    ATOM_TCB *curr_tcb_ptr;
+    TCB_t *curr_tcb_ptr;
 
     /* Check parameters */
     if ((qptr == NULL) || (msgptr == NULL))
@@ -787,7 +787,7 @@ static void atomQueueTimerCallback (POINTER cb_data)
 static uint8_t queue_remove (ATOM_QUEUE *qptr, uint8_t* msgptr)
 {
     uint8_t status;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
 
     /* Check parameters */
     if ((qptr == NULL) || (msgptr == NULL))
@@ -881,7 +881,7 @@ static uint8_t queue_remove (ATOM_QUEUE *qptr, uint8_t* msgptr)
 static uint8_t queue_insert (ATOM_QUEUE *qptr, uint8_t* msgptr)
 {
     uint8_t status;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
 
     /* Check parameters */
     if ((qptr == NULL) || (msgptr == NULL))

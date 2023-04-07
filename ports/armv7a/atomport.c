@@ -50,7 +50,7 @@
  * can be used to enable interrupts, however, without explicitly storing
  * it in the thread's context.
  */
-void archThreadContextInit (ATOM_TCB *tcb_ptr, void *stack_top,
+void archThreadContextInit (TCB_t *tcb_ptr, void *stack_top,
                             void (*entry_point)(UINT32),
                             UINT32 entry_param)
 {
@@ -71,7 +71,7 @@ void archThreadContextInit (ATOM_TCB *tcb_ptr, void *stack_top,
 
 
 /**
- * archFirstThreadRestore(ATOM_TCB *new_tcb)
+ * archFirstThreadRestore(TCB_t *new_tcb)
  *
  * This function is responsible for restoring and starting the first
  * thread the OS runs. It expects to find the thread context exactly
@@ -82,7 +82,7 @@ void archThreadContextInit (ATOM_TCB *tcb_ptr, void *stack_top,
  *
  * The final action this function must do is to restore interrupts.
  */
-void archFirstThreadRestore(ATOM_TCB *new_tcb)
+void archFirstThreadRestore(TCB_t *new_tcb)
 {
 	pt_regs_t *regs = (pt_regs_t *)((uint32_t)new_tcb->sp_save_ptr 
 							- sizeof(pt_regs_t));
@@ -94,9 +94,9 @@ void archFirstThreadRestore(ATOM_TCB *new_tcb)
  * of CPU by thread or a pre-emption, under both conditions this function is
  * called. The signature is as follows:
  *
- * archContextSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
+ * archContextSwitch(TCB_t *old_tcb, TCB_t *new_tcb)
  */
-void archContextSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
+void archContextSwitch(TCB_t *old_tcb, TCB_t *new_tcb)
 {
 	uint32_t tmp = 0x0, lr = 0x0;
 	pt_regs_t *old_regs = (pt_regs_t *)((uint32_t)old_tcb->sp_save_ptr

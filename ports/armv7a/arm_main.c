@@ -120,7 +120,7 @@
 /* Local data */
 
 /* Application threads' TCBs */
-static ATOM_TCB main_tcb;
+static TCB_t main_tcb;
 
 /* Main thread's stack area */
 static uint8_t main_thread_stack[MAIN_STACK_SIZE_BYTES];

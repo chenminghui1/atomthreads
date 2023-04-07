@@ -39,7 +39,7 @@
 
 /* Test OS objects */
 static ATOM_MUTEX mutex1;
-static ATOM_TCB tcb[NUM_TEST_THREADS];
+static TCB_t tcb[NUM_TEST_THREADS];
 static uint8_t test_thread_stack[NUM_TEST_THREADS][TEST_THREAD_STACK_SIZE];
 
 

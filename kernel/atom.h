@@ -78,11 +78,11 @@ typedef struct atom_tcb
     uint32_t stack_size;          /* Size of stack allocation in bytes */
 #endif
 
-} ATOM_TCB;
+} TCB_t;
 
 
 /* Global data */
-extern ATOM_TCB *tcbReadyQ;
+extern TCB_t *tcbReadyQ;
 extern uint8_t atomOSStarted;
 
 
@@ -121,21 +121,21 @@ extern void atomSched (uint8_t timer_tick);
 extern void atomIntEnter (void);
 extern void atomIntExit (uint8_t timer_tick);
 
-extern uint8_t tcbEnqueuePriority (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr);
-extern ATOM_TCB *tcbDequeueHead (ATOM_TCB **tcb_queue_ptr);
-extern ATOM_TCB *tcbDequeueEntry (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr);
-extern ATOM_TCB *tcbDequeuePriority (ATOM_TCB **tcb_queue_ptr, uint8_t priority);
+extern uint8_t tcbEnqueuePriority (TCB_t **tcb_queue_ptr, TCB_t *tcb_ptr);
+extern TCB_t *tcbDequeueHead (TCB_t **tcb_queue_ptr);
+extern TCB_t *tcbDequeueEntry (TCB_t **tcb_queue_ptr, TCB_t *tcb_ptr);
+extern TCB_t *tcbDequeuePriority (TCB_t **tcb_queue_ptr, uint8_t priority);
 
-extern ATOM_TCB *atomCurrentContext (void);
+extern TCB_t *atomCurrentContext (void);
 
-extern uint8_t atomTaskCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check);
-extern uint8_t atomThreadStackCheck (ATOM_TCB *tcb_ptr, uint32_t *used_bytes, uint32_t *free_bytes);
+extern uint8_t atomTaskCreate (TCB_t *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check);
+extern uint8_t atomThreadStackCheck (TCB_t *tcb_ptr, uint32_t *used_bytes, uint32_t *free_bytes);
 //如果想要退出任务，需要调用atomThreadExit()函数。任务函数一般不允许跳出循环，如果一定要跳出循环的话在跳出循环以后一定要调用
 //函数 vTaskDelete(NULL)删除此任务！
 extern uint8_t atomTaskDelete (void );
-extern void archContextSwitch (ATOM_TCB *old_tcb_ptr, ATOM_TCB *new_tcb_ptr);
-extern void archThreadContextInit (ATOM_TCB *tcb_ptr, void *stack_top, void (*entry_point)(uint32_t), uint32_t entry_param);
-extern void archFirstThreadRestore(ATOM_TCB *new_tcb_ptr);
+extern void archContextSwitch (TCB_t *old_tcb_ptr, TCB_t *new_tcb_ptr);
+extern void archThreadContextInit (TCB_t *tcb_ptr, void *stack_top, void (*entry_point)(uint32_t), uint32_t entry_param);
+extern void archFirstThreadRestore(TCB_t *new_tcb_ptr);
 //系统时钟周期处理程序。
 extern void atomTimerTick (void);
 

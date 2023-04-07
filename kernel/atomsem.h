@@ -36,7 +36,7 @@ extern "C" {
 
 typedef struct atom_sem
 {
-    ATOM_TCB *  suspQ;  /* Queue of threads suspended on this semaphore */
+    TCB_t *  suspQ;  /* Queue of threads suspended on this semaphore */
     uint8_t     count;  /* Semaphore count */
 } ATOM_SEM;
 

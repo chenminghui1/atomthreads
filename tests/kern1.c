@@ -33,7 +33,7 @@
 
 
 /* Test OS objects */
-static ATOM_TCB tcb1;
+static TCB_t tcb1;
 static uint8_t test_thread_stack[TEST_THREAD_STACK_SIZE];
 
 

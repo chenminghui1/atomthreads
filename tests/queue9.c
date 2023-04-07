@@ -50,7 +50,7 @@
 static ATOM_QUEUE queue1;
 static uint8_t queue1_storage[QUEUE_ENTRIES];
 static ATOM_SEM sem1;
-static ATOM_TCB tcb[NUM_TEST_THREADS];
+static TCB_t tcb[NUM_TEST_THREADS];
 static uint8_t test_thread_stack[NUM_TEST_THREADS][TEST_THREAD_STACK_SIZE];
 
 

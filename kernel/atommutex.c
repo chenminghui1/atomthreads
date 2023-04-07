@@ -110,7 +110,7 @@
 
 typedef struct mutex_timer
 {
-    ATOM_TCB *tcb_ptr;      /* Thread which is suspended with timeout */
+    TCB_t *tcb_ptr;      /* Thread which is suspended with timeout */
     ATOM_MUTEX *mutex_ptr;  /* Mutex the thread is suspended on */
 } MUTEX_TIMER;
 
@@ -193,7 +193,7 @@ uint8_t atomMutexDelete (ATOM_MUTEX *mutex)
 {
     uint8_t status;
     CRITICAL_STORE;
-    ATOM_TCB *tcb_ptr;
+    TCB_t *tcb_ptr;
     uint8_t woken_threads = FALSE;
 
     /* Parameter check */
@@ -342,7 +342,7 @@ uint8_t atomMutexGet (ATOM_MUTEX *mutex, int32_t timeout)
     uint8_t status;
     MUTEX_TIMER timer_data;
     ATOM_TIMER timer_cb;
-    ATOM_TCB *curr_tcb_ptr;
+    TCB_t *curr_tcb_ptr;
 
     /* Check parameters */
     if (mutex == NULL)
@@ -546,7 +546,7 @@ uint8_t atomMutexPut (ATOM_MUTEX * mutex)
 {
     uint8_t status;
     CRITICAL_STORE;
-    ATOM_TCB *tcb_ptr, *curr_tcb_ptr;
+    TCB_t *tcb_ptr, *curr_tcb_ptr;
 
     /* Check parameters */
     if (mutex == NULL)

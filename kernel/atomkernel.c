@@ -168,7 +168,7 @@
  * on some OS primitive if no longer ready (e.g. on the suspended TCB queue
  * for a semaphore, or in the timer list if suspended on a timer delay).
  */
-ATOM_TCB *tcbReadyQ = NULL;
+TCB_t *tcbReadyQ = NULL;
 
 /** Set to TRUE when OS is started and running threads */
 uint8_t atomOSStarted = FALSE;
@@ -177,10 +177,10 @@ uint8_t atomOSStarted = FALSE;
 /* Local data */
 
 /** This is a pointer to the TCB for the currently-running thread */
-static ATOM_TCB *curr_tcb = NULL;
+static TCB_t *curr_tcb = NULL;
 
 /** Storage for the idle thread's TCB */
-static ATOM_TCB idle_tcb;
+static TCB_t idle_tcb;
 
 /* Number of nested interrupts */
 static int atomIntCnt = 0;
@@ -193,7 +193,7 @@ static int atomIntCnt = 0;
 
 
 /* Forward declarations */
-static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb);
+static void atomThreadSwitch(TCB_t *old_tcb, TCB_t *new_tcb);
 static void atomIdleThread (uint32_t data);
 
 
@@ -223,7 +223,7 @@ static void atomIdleThread (uint32_t data);
 void atomSched (uint8_t timer_tick)
 {
     CRITICAL_STORE;
-    ATOM_TCB *new_tcb = NULL;
+    TCB_t *new_tcb = NULL;
     int16_t lowest_pri;
 
     /**
@@ -330,7 +330,7 @@ void atomSched (uint8_t timer_tick)
  *
  * @return None
  */
-static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
+static void atomThreadSwitch(TCB_t *old_tcb, TCB_t *new_tcb)
 {
     /**
      * The context switch will shift execution to a different thread. The
@@ -361,7 +361,7 @@ static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
  *
  * Creates and starts a new thread.
  *
- * Callers provide the ATOM_TCB structure storage, these are not obtained
+ * Callers provide the TCB_t structure storage, these are not obtained
  * from an internal TCB free list.
  *
  * The function puts the new thread on the ready queue and calls the
@@ -384,7 +384,7 @@ static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
  * @retval ATOM_ERR_PARAM Bad parameters
  * @retval ATOM_ERR_QUEUE Error putting the thread on the ready queue
  */
-uint8_t atomTaskCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check)
+uint8_t atomTaskCreate (TCB_t *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check)
 {
     CRITICAL_STORE;
     uint8_t status;
@@ -532,7 +532,7 @@ uint8_t atomTaskCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)
  * @retval ATOM_ERR_PARAM Bad parameters
  * @retval ATOM_ERR_QUEUE Error putting the thread on the ready queue
  */
-uint8_t atomThreadStackCheck (ATOM_TCB *tcb_ptr, uint32_t *used_bytes, uint32_t *free_bytes)
+uint8_t atomThreadStackCheck (TCB_t *tcb_ptr, uint32_t *used_bytes, uint32_t *free_bytes)
 {
     uint8_t status;
     uint8_t *stack_ptr;
@@ -630,7 +630,7 @@ void atomIntExit (uint8_t timer_tick)
  *
  * @retval Pointer to current thread's TCB, NULL if in interrupt context
  */
-ATOM_TCB *atomCurrentContext (void)
+TCB_t *atomCurrentContext (void)
 {
     /* Return the current thread's TCB or NULL if in interrupt context */
     if (atomIntCnt == 0)
@@ -712,7 +712,7 @@ uint8_t atomOSInit (void *idle_thread_stack_bottom, uint32_t idle_thread_stack_s
  */
 void atomOSStart (void)
 {
-    ATOM_TCB *new_tcb;
+    TCB_t *new_tcb;
 
     /**
      * Enable the OS started flag. This stops routines like atomTaskCreate()
@@ -796,10 +796,10 @@ static void atomIdleThread (uint32_t param)
  * @retval ATOM_OK Success
  * @retval ATOM_ERR_PARAM Bad parameters
  */
-uint8_t tcbEnqueuePriority (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr)
+uint8_t tcbEnqueuePriority (TCB_t **tcb_queue_ptr, TCB_t *tcb_ptr)
 {
     uint8_t status;
-    ATOM_TCB *prev_ptr, *next_ptr;
+    TCB_t *prev_ptr, *next_ptr;
 
     /* Parameter check */
     if ((tcb_queue_ptr == NULL) || (tcb_ptr == NULL))
@@ -881,9 +881,9 @@ uint8_t tcbEnqueuePriority (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr)
  *
  * @return Pointer to highest priority TCB on queue, or NULL if queue empty
  */
-ATOM_TCB *tcbDequeueHead (ATOM_TCB **tcb_queue_ptr)
+TCB_t *tcbDequeueHead (TCB_t **tcb_queue_ptr)
 {
-    ATOM_TCB *ret_ptr;
+    TCB_t *ret_ptr;
 
     /* Parameter check */
     if (tcb_queue_ptr == NULL)
@@ -932,9 +932,9 @@ ATOM_TCB *tcbDequeueHead (ATOM_TCB **tcb_queue_ptr)
  *
  * @return Pointer to the dequeued TCB, or NULL if entry wasn't found
  */
-ATOM_TCB *tcbDequeueEntry (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr)
+TCB_t *tcbDequeueEntry (TCB_t **tcb_queue_ptr, TCB_t *tcb_ptr)
 {
-    ATOM_TCB *ret_ptr, *prev_ptr, *next_ptr;
+    TCB_t *ret_ptr, *prev_ptr, *next_ptr;
 
     /* Parameter check */
     if (tcb_queue_ptr == NULL)
@@ -1013,9 +1013,9 @@ ATOM_TCB *tcbDequeueEntry (ATOM_TCB **tcb_queue_ptr, ATOM_TCB *tcb_ptr)
  *
  * @return Pointer to the dequeued TCB, or NULL if none found within priority
  */
-ATOM_TCB *tcbDequeuePriority (ATOM_TCB **tcb_queue_ptr, uint8_t priority)
+TCB_t *tcbDequeuePriority (TCB_t **tcb_queue_ptr, uint8_t priority)
 {
-    ATOM_TCB *ret_ptr;
+    TCB_t *ret_ptr;
 
     /* Parameter check */
     if (tcb_queue_ptr == NULL)
