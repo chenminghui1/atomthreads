@@ -132,9 +132,9 @@ uint32_t test_start (void)
         failures++;
     }
 
-    else if (atomThreadCreate(&tcb[0], TEST_THREAD_PRIO, test1_thread_func, 0,
-              &test_thread_stack[0][0],
-              TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    else if (atomTaskCreate(&tcb[0], TEST_THREAD_PRIO, test1_thread_func, 0,
+                            &test_thread_stack[0][0],
+                            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         /* Fail */
         ATOMLOG (_STR("Error creating test thread 1\n"));
@@ -199,9 +199,9 @@ uint32_t test_start (void)
         ATOMLOG (_STR("Error creating test semaphore 2\n"));
         failures++;
     }
-    else if (atomThreadCreate(&tcb[1], TEST_THREAD_PRIO, test2_thread_func, 0,
-              &test_thread_stack[1][0],
-              TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    else if (atomTaskCreate(&tcb[1], TEST_THREAD_PRIO, test2_thread_func, 0,
+                            &test_thread_stack[1][0],
+                            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         /* Fail */
         ATOMLOG (_STR("Error creating test thread 2\n"));

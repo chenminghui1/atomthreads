@@ -48,7 +48,7 @@
  * thread will be run. This ensures that there is a thread to run at all
  * times.
  *
- * Application code creates threads using atomThreadCreate(). These threads
+ * Application code creates threads using atomTaskCreate(). These threads
  * are added to the ready queue and eventually run when it is their turn
  * (based on priority). When threads are currently-running they are taken off
  * the ready queue. Threads continue to run until:
@@ -85,7 +85,7 @@
  * \li After any OS call changes ready states: Any OS primitives which change
  *     the running state of a thread will call the scheduler to ensure that
  *     the change of thread state is noted. For example if a new thread is
- *     created using atomThreadCreate(), it will internally call the scheduler
+ *     created using atomTaskCreate(), it will internally call the scheduler
  *     in case the newly-created thread is higher priority than the
  *     currently-running thread. Similarly OS primitives such as semaphores
  *     often make changes to a thread's running state. If a thread is going to
@@ -124,7 +124,7 @@
  *
  * \b Application-callable general functions: \n
  *
- * \li atomThreadCreate(): Thread creation API.
+ * \li atomTaskCreate(): Thread creation API.
  * \li atomCurrentContext(): Used by kernel and application code to check
  *     whether the thread is currently running at thread or interrupt context.
  *     This is very useful for implementing safety checks and preventing
@@ -357,7 +357,7 @@ static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
 
 
 /**
- * \b atomThreadCreate
+ * \b atomTaskCreate
  *
  * Creates and starts a new thread.
  *
@@ -384,7 +384,7 @@ static void atomThreadSwitch(ATOM_TCB *old_tcb, ATOM_TCB *new_tcb)
  * @retval ATOM_ERR_PARAM Bad parameters
  * @retval ATOM_ERR_QUEUE Error putting the thread on the ready queue
  */
-uint8_t atomThreadCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check)
+uint8_t atomTaskCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check)
 {
     CRITICAL_STORE;
     uint8_t status;
@@ -656,7 +656,7 @@ ATOM_TCB *atomCurrentContext (void)
  *
  * \li Call atomOSInit() before calling any atomthreads APIs
  * \li Arrange for a timer to call atomTimerTick() periodically
- * \li Create one or more application threads using atomThreadCreate()
+ * \li Create one or more application threads using atomTaskCreate()
  * \li Start the OS using atomOSStart(). At this point the highest
  *     priority application thread created will be started.
  *
@@ -682,13 +682,13 @@ uint8_t atomOSInit (void *idle_thread_stack_bottom, uint32_t idle_thread_stack_s
     atomOSStarted = FALSE;
 
     /* Create the idle thread */
-    status = atomThreadCreate(&idle_tcb,
-                 IDLE_THREAD_PRIORITY,
-                 atomIdleThread,
-                 0,
-                 idle_thread_stack_bottom,
-                 idle_thread_stack_size,
-				 idle_thread_stack_check);
+    status = atomTaskCreate(&idle_tcb,
+                            IDLE_THREAD_PRIORITY,
+                            atomIdleThread,
+                            0,
+                            idle_thread_stack_bottom,
+                            idle_thread_stack_size,
+                            idle_thread_stack_check);
 
     /* Return status */
     return (status);
@@ -715,14 +715,14 @@ void atomOSStart (void)
     ATOM_TCB *new_tcb;
 
     /**
-     * Enable the OS started flag. This stops routines like atomThreadCreate()
+     * Enable the OS started flag. This stops routines like atomTaskCreate()
      * attempting to schedule in a newly-created thread until the scheduler is
      * up and running.
      */
     atomOSStarted = TRUE;
 
     /**
-     * Application calls to atomThreadCreate() should have added at least one
+     * Application calls to atomTaskCreate() should have added at least one
      * thread to the ready queue. Take the highest priority one off and
      * schedule it in. If no threads were created, the OS will simply start
      * the idle thread (the lowest priority allowed to be scheduled is the

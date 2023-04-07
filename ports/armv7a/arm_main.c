@@ -91,7 +91,7 @@
  * What we do here is to reuse part of the idle thread's stack during
  * initial startup. As soon as we enter the main() routine we move the
  * stack pointer to half-way down the idle thread's stack. This is used
- * temporarily while calls are made to atomOSInit(), atomThreadCreate()
+ * temporarily while calls are made to atomOSInit(), atomTaskCreate()
  * and atomOSStart(). Once the OS is started this stack area is no
  * longer required, and can be used for its original purpose (for the
  * idle thread's stack).
@@ -176,10 +176,10 @@ int main ( void )
 		arm_uart_init();
 
         /* Create an application thread */
-        status = atomThreadCreate(&main_tcb,
-                     TEST_THREAD_PRIO, main_thread_func, 0,
-                     &main_thread_stack[0],
-				  MAIN_STACK_SIZE_BYTES, 0);
+        status = atomTaskCreate(&main_tcb,
+                                TEST_THREAD_PRIO, main_thread_func, 0,
+                                &main_thread_stack[0],
+                                MAIN_STACK_SIZE_BYTES, 0);
         if (status == ATOM_OK)
         {
 			arm_timer_enable();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Kelvin Lawson. All rights reserved.
+ * Copyright (c) 2011, Anup Patel. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,56 +26,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef __ARM_TIMER_H
+#define __ARM_TIMER_H
 
-#ifndef __ATOM_PORT_PRIVATE_H
-#define __ATOM_PORT_PRIVATE_H
+#include <atomport.h>
 
+#define TIMER_LOAD		0x00
+#define TIMER_VALUE		0x04
+#define TIMER_CTRL		0x08
+#define TIMER_CTRL_ONESHOT	(1 << 0)
+#define TIMER_CTRL_32BIT	(1 << 1)
+#define TIMER_CTRL_DIV1		(0 << 2)
+#define TIMER_CTRL_DIV16	(1 << 2)
+#define TIMER_CTRL_DIV256	(2 << 2)
+#define TIMER_CTRL_IE		(1 << 5)	/* Interrupt Enable (versatile only) */
+#define TIMER_CTRL_PERIODIC	(1 << 6)
+#define TIMER_CTRL_ENABLE	(1 << 7)
 
-/**
- * Compiler-specific modifier to prevent some functions from saving
- * and restoring registers on entry and exit, if the function is
- * known to never complete (e.g. thread entry points).
- * Reduces stack usage on supporting compilers.
- */
-#ifdef __IAR_SYSTEMS_ICC__
-#define NO_REG_SAVE __task
-#else
-#define NO_REG_SAVE
-#endif
+#define TIMER_INTCLR		0x0c
+#define TIMER_RIS		0x10
+#define TIMER_MIS		0x14
+#define TIMER_BGLOAD		0x18
 
+void arm_timer_enable(void);
+void arm_timer_disable(void);
+void arm_timer_clearirq(void);
+int arm_timer_init(uint32_t ticks_per_sec);
 
-/**
- * Compiler-specific modifiers for interrupt handler functions.
- *
- * COSMIC: Uses @interrupt modifier for interrupt handlers. We
- * also force all interrupts to save c_lreg, a separate memory
- * area which Cosmic uses for longs and floats. This memory
- * area must be saved by interrupt handlers for context
- * switch purposes, and to avoid making it impossible to use
- * longs in any OS kernel code accessed by interrupt handlers.
- *
- * IAR: Uses __interrupt modifier for interrupt handlers.
- *
- * RAISONANCE: Uses no prefix modifier, but specifies
- * interrupt vector after (see TIM1_SystemTickISR() for an
- * example).
- */
-#if defined(__CSMC__)
-#define INTERRUPT @far @interrupt @svlreg
-#elif defined (__IAR_SYSTEMS_ICC__)
-#define INTERRUPT __interrupt
-#elif defined(__RCSTM8__) || defined(__SDCC_stm8)
-#define INTERRUPT
-#endif
-
-
-/* Function prototypes */
-void archInitSystemTickTimer (void);
-#ifndef __SDCC_stm8
-INTERRUPT void TIM1_SystemTickISR (void);
-#else
-void TIM1_SystemTickISR (void) __interrupt(11);
-#endif
-
-#endif /* __ATOM_PORT_PRIVATE_H */
-
+#endif /* __ARM_TIMER_H */

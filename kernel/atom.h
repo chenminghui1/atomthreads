@@ -41,7 +41,7 @@ extern "C" {
 
 /* Forward declaration */
 struct atom_tcb;
-
+//任务控制块
 typedef struct atom_tcb
 {
     /*
@@ -59,7 +59,7 @@ typedef struct atom_tcb
     uint8_t priority;
 
     /* Thread entry point and parameter */
-    void (*entry_point)(uint32_t);
+    void (*entry_point)(uint32_t); /* Thread 入口函数 */
     uint32_t entry_param;
 
     /* Queue pointers */
@@ -106,10 +106,13 @@ extern uint8_t atomOSStarted;
 #define ATOM_ERR_OWNERSHIP      207
 
 /* Idle thread priority (lowest) */
-#define IDLE_THREAD_PRIORITY    255
+#define IDLE_THREAD_PRIORITY    0
+/* Maximum number of priorities 最高优先级*/
+#define configMAX_PRIORITIES    32
+/* 允许多个任务共享一个优先级 */
+#define configUSE_TIME_SLICING 1
 
-
-/* Function prototypes */
+/* Function prototypes功能原型 */
 extern uint8_t atomOSInit (void *idle_thread_stack_bottom, uint32_t idle_thread_stack_size, uint8_t idle_thread_stack_check);
 extern void atomOSStart (void);
 
@@ -125,13 +128,15 @@ extern ATOM_TCB *tcbDequeuePriority (ATOM_TCB **tcb_queue_ptr, uint8_t priority)
 
 extern ATOM_TCB *atomCurrentContext (void);
 
-extern uint8_t atomThreadCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check);
+extern uint8_t atomTaskCreate (ATOM_TCB *tcb_ptr, uint8_t priority, void (*entry_point)(uint32_t), uint32_t entry_param, void *stack_bottom, uint32_t stack_size, uint8_t stack_check);
 extern uint8_t atomThreadStackCheck (ATOM_TCB *tcb_ptr, uint32_t *used_bytes, uint32_t *free_bytes);
-
+//如果想要退出任务，需要调用atomThreadExit()函数。任务函数一般不允许跳出循环，如果一定要跳出循环的话在跳出循环以后一定要调用
+//函数 vTaskDelete(NULL)删除此任务！
+extern uint8_t atomTaskDelete (void );
 extern void archContextSwitch (ATOM_TCB *old_tcb_ptr, ATOM_TCB *new_tcb_ptr);
 extern void archThreadContextInit (ATOM_TCB *tcb_ptr, void *stack_top, void (*entry_point)(uint32_t), uint32_t entry_param);
 extern void archFirstThreadRestore(ATOM_TCB *new_tcb_ptr);
-
+//系统时钟周期处理程序。
 extern void atomTimerTick (void);
 
 #ifdef __cplusplus

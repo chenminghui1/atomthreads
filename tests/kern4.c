@@ -96,30 +96,30 @@ uint32_t test_start (void)
      * can do so without confusing the scheduling tests by having
      * a spell in which this thread was run.
      */
-    if (atomThreadCreate (&tcb[0], TEST_THREAD_PRIO + 1, test_thread_func, 0,
-            &test_thread_stack[0][0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    if (atomTaskCreate(&tcb[0], TEST_THREAD_PRIO + 1, test_thread_func, 0,
+                       &test_thread_stack[0][0],
+                       TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         ATOMLOG (_STR("Bad thread create\n"));
         failures++;
     }
-    else if (atomThreadCreate (&tcb[1], TEST_THREAD_PRIO + 1, test_thread_func, 1,
-            &test_thread_stack[1][0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    else if (atomTaskCreate(&tcb[1], TEST_THREAD_PRIO + 1, test_thread_func, 1,
+                            &test_thread_stack[1][0],
+                            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         ATOMLOG (_STR("Bad thread create\n"));
         failures++;
     }
-    else if (atomThreadCreate (&tcb[2], TEST_THREAD_PRIO + 1, test_thread_func, 2,
-            &test_thread_stack[2][0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    else if (atomTaskCreate(&tcb[2], TEST_THREAD_PRIO + 1, test_thread_func, 2,
+                            &test_thread_stack[2][0],
+                            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         ATOMLOG (_STR("Bad thread create\n"));
         failures++;
     }
-    else if (atomThreadCreate (&tcb[3], TEST_THREAD_PRIO + 1, test_thread_func, 3,
-            &test_thread_stack[3][0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+    else if (atomTaskCreate(&tcb[3], TEST_THREAD_PRIO + 1, test_thread_func, 3,
+                            &test_thread_stack[3][0],
+                            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
     {
         ATOMLOG (_STR("Bad thread create\n"));
         failures++;

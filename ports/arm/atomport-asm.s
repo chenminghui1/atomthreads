@@ -110,7 +110,7 @@ archContextSwitch:
  * It expects to see the context saved in the same way as if the
  * thread has been previously scheduled out, and had its context
  * saved. That is, archThreadContextInit() will have been called
- * first (via atomThreadCreate()) to create a "fake" context save
+ * first (via atomTaskCreate()) to create a "fake" context save
  * area, containing the relevant register-save values for a thread
  * restore.
  *

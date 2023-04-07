@@ -61,35 +61,35 @@ uint32_t test_start (void)
     /* Default to zero failures */
     failures = 0;
 
-    /* atomThreadCreate: Pass a bad TCB pointer */
-    if (atomThreadCreate (NULL, TEST_THREAD_PRIO, test_thread_func, 0,
-            &test_thread_stack[0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
+    /* atomTaskCreate: Pass a bad TCB pointer */
+    if (atomTaskCreate(NULL, TEST_THREAD_PRIO, test_thread_func, 0,
+                       &test_thread_stack[0],
+                       TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
     {
         ATOMLOG (_STR("Bad TCB check\n"));
         failures++;
     }
 
-    /* atomThreadCreate: Pass a bad entry point */
-    if (atomThreadCreate (&tcb1, TEST_THREAD_PRIO, NULL, 0,
-            &test_thread_stack[0],
-            TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
+    /* atomTaskCreate: Pass a bad entry point */
+    if (atomTaskCreate(&tcb1, TEST_THREAD_PRIO, NULL, 0,
+                       &test_thread_stack[0],
+                       TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
     {
         ATOMLOG (_STR("Bad entry check\n"));
         failures++;
     }
 
-    /* atomThreadCreate: Pass a bad stack pointer */
-    if (atomThreadCreate (&tcb1, TEST_THREAD_PRIO, test_thread_func, 0,
-            NULL, TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
+    /* atomTaskCreate: Pass a bad stack pointer */
+    if (atomTaskCreate(&tcb1, TEST_THREAD_PRIO, test_thread_func, 0,
+                       NULL, TEST_THREAD_STACK_SIZE, TRUE) != ATOM_ERR_PARAM)
     {
         ATOMLOG (_STR("Bad stack ptr check\n"));
         failures++;
     }
 
-    /* atomThreadCreate: Pass a bad stack size */
-    if (atomThreadCreate (&tcb1, TEST_THREAD_PRIO, test_thread_func, 0,
-            &test_thread_stack[0], 0, TRUE) != ATOM_ERR_PARAM)
+    /* atomTaskCreate: Pass a bad stack size */
+    if (atomTaskCreate(&tcb1, TEST_THREAD_PRIO, test_thread_func, 0,
+                       &test_thread_stack[0], 0, TRUE) != ATOM_ERR_PARAM)
     {
         ATOMLOG (_STR("Bad stack size check\n"));
         failures++;

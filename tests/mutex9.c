@@ -87,9 +87,9 @@ uint32_t test_start (void)
         shared_data = 0;
 
         /* Create second thread */
-        if (atomThreadCreate(&tcb[0], TEST_THREAD_PRIO, test_thread_func, 1,
-              &test_thread_stack[0][0],
-              TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
+        if (atomTaskCreate(&tcb[0], TEST_THREAD_PRIO, test_thread_func, 1,
+                           &test_thread_stack[0][0],
+                           TEST_THREAD_STACK_SIZE, TRUE) != ATOM_OK)
         {
             /* Fail */
             ATOMLOG (_STR("Error creating test thread\n"));

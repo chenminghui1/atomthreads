@@ -17,7 +17,7 @@ ifndef CPU
 CPU=cortex-a8
 endif
 ifndef BOARD
-BOARD=pb-a8
+BOARD=imx6-null
 endif
 CC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy

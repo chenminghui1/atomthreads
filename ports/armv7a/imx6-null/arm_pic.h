@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Kelvin Lawson. All rights reserved.
+ * Copyright (c) 2011, Anup Patel. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,39 +26,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef _ARM_GIC_H__
+#define _ARM_GIC_H__
 
-#ifndef __ATOM_PORT_TESTS_H
-#define __ATOM_PORT_TESTS_H
+#include <atomport.h>
+#include <arm_plat.h>
 
-/* Include Atomthreads kernel API */
-#include "atom.h"
+#define GIC_CPU_CTRL			0x00
+#define GIC_CPU_PRIMASK			0x04
+#define GIC_CPU_BINPOINT		0x08
+#define GIC_CPU_INTACK			0x0c
+#define GIC_CPU_EOI			0x10
+#define GIC_CPU_RUNNINGPRI		0x14
+#define GIC_CPU_HIGHPRI			0x18
 
-/* Prerequisite include for ATOMLOG() macro (via printf) */
-#include <stdio.h>
+#define GIC_DIST_CTRL			0x000
+#define GIC_DIST_CTR			0x004
+#define GIC_DIST_ENABLE_SET		0x100
+#define GIC_DIST_ENABLE_CLEAR		0x180
+#define GIC_DIST_PENDING_SET		0x200
+#define GIC_DIST_PENDING_CLEAR		0x280
+#define GIC_DIST_ACTIVE_BIT		0x300
+#define GIC_DIST_PRI			0x400
+#define GIC_DIST_TARGET			0x800
+#define GIC_DIST_CONFIG			0xc00
+#define GIC_DIST_SOFTINT		0xf00
 
-/* Logger macro for viewing test results */
-#define ATOMLOG     printf
+int arm_pic_active_irq(void);
+int arm_pic_ack_irq(uint32_t irq);
+int arm_pic_mask(uint32_t irq);
+int arm_pic_unmask(uint32_t irq);
+int arm_pic_init(void);
 
-/*
- * String location macro: for platforms which need to place strings in
- * alternative locations. Not used on this platform.
- */
-#define _STR
-
-/* Default thread stack size (in bytes) */
-#define TEST_THREAD_STACK_SIZE      192
-
-/* Uncomment to enable logging of stack usage to UART */
-#define TESTS_LOG_STACK_USAGE
-
-/**
- * IAR EWSTM8: Ignore warnings on volatile ordering thrown up
- * by ATOMLOG() statements in the test modules.
- */
-#ifdef __IAR_SYSTEMS_ICC__
-#pragma diag_suppress=Pa082
 #endif
-
-
-#endif /* __ATOM_PORT_TESTS_H */
-
